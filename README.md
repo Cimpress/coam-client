@@ -1,2 +1,3 @@
-# cimpress-coam
+# COAM thin client
+
 A thin client

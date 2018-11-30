@@ -200,7 +200,7 @@ const deleteGroup = (accessToken, groupId) => {
     return exec(data);
 };
 
-const findGroups = (resourceType, resourceIdentifier) => {
+const findGroups = (accessToken, resourceType, resourceIdentifier) => {
     let data = defaultRequestData(accessToken, {
         url: `/v1/groups?resource_type=${resourceType}&resource_identifier=${resourceIdentifier}&cache_bust=${Math.random()}`,
         method: 'GET',
@@ -251,12 +251,16 @@ export {
     grantRoleToPrincipal,
 
     setAdminFlag,
+    createGroup,
+    deleteGroup,
+    findGroups,
     getGroupInfo,
     addGroupMember,
     deleteGroupMember,
     group56,
 
     addResourceToGroup,
+    removeResourceFromGroup,
 
     hasPermission,
 

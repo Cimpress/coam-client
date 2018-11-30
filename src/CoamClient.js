@@ -4,7 +4,7 @@ import axiosRetry from 'axios-retry';
 
 const DEFAULT_BASE_URL = 'https://api.cimpress.io';
 
-/// TODO
+// TODO
 
 class CoamClient {
     constructor(options) {
