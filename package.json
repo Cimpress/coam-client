@@ -1,0 +1,49 @@
+{
+  "name": "coam-client",
+  "version": "0.0.1",
+  "description": "A thin client for COAM service",
+  "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha --require babel-core/register tests/",
+    "code-check": "eslint --ext .js --ext .jsx src",
+    "cover": "node ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/mocha --require babel-core/register tests/",
+    "build": "node ./node_modules/babel-cli/bin/babel.js src -d lib --copy-files"
+  },
+  "author": "TrdelnikSquad@cimpress.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cimpress/coam-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Cimpress/coam-client/issues"
+  },
+  "homepage": "https://github.com/Cimpress/coam-client#readme",
+  "keywords": [
+    "cimpress",
+    "coam"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.1.2",
+    "eslint": "^5.4.0",
+    "eslint-config-google": "^0.9.1",
+    "mocha": "^5.2.0",
+    "nock": "^9.6.1",
+    "nyc": "^13.0.1"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "axios-retry": "^3.1.1",
+    "country-language": "^0.1.7",
+    "moment-timezone": "^0.5.21",
+    "pope": "^2.0.2",
+    "regenerator": "^0.13.2",
+    "regenerator-runtime": "^0.12.1"
+  }
+}
