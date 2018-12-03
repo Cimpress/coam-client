@@ -4,7 +4,7 @@ import axiosRetry from 'axios-retry';
 const defaultRequestData = (accessToken, additionalRequest) => {
     return Object.assign({}, {
         baseURL: `https://api.cimpress.io/auth/access-management`,
-        timeout: 3000,
+        timeout: 799,
         headers: {
             'Authorization': 'Bearer ' + accessToken,
         },
@@ -35,7 +35,7 @@ const exec = (data) => {
 
 const hasPermission = (accessToken, principal, resourceType, resourceIdentifier, permission) => {
     let data = defaultRequestData(accessToken, {
-        url: `/v1/principals/${principal}/permissions/${resourceType}/${resourceIdentifier}/${permission}?skipCache=${Math.random()}`,
+        url: `/v1/principals/${encodeURIComponent(principal)}/permissions/${encodeURIComponent(resourceType)}/${encodeURIComponent(resourceIdentifier)}/${encodeURIComponent(permission)}?skipCache=${Math.random()}`,
         method: 'GET',
     });
 
@@ -202,8 +202,13 @@ const deleteGroup = (accessToken, groupId) => {
 
 const findGroups = (accessToken, resourceType, resourceIdentifier) => {
     let data = defaultRequestData(accessToken, {
-        url: `/v1/groups?resource_type=${resourceType}&resource_identifier=${resourceIdentifier}&cache_bust=${Math.random()}`,
+        url: `/v1/groups`,
         method: 'GET',
+        params: {
+            resource_type: resourceType,
+            resource_identifier: resourceIdentifier,
+            cache_bust: Math.random() * 1000000,
+        },
     });
 
     return exec(data);
@@ -241,6 +246,14 @@ const addResourceToGroup = (accessToken, groupId, resourceType, resourceId) => {
     return exec(data);
 };
 
+const getUserPermissionsForResourceType = (accessToken, principal, resourceType) => {
+    let data = defaultRequestData(accessToken, {
+        url: `/v1/principals/${encodeURIComponent(principal)}/permissions/${encodeURIComponent(resourceType)}`,
+        method: 'GET',
+    });
+
+    return exec(data);
+};
 
 export {
 
@@ -263,6 +276,7 @@ export {
     removeResourceFromGroup,
 
     hasPermission,
+    getUserPermissionsForResourceType,
 
     searchPrincipals,
 };
