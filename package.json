@@ -1,13 +1,13 @@
 {
   "name": "coam-client",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A thin client for COAM service",
   "main": "./lib/index.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha --require babel-core/register tests/",
+    "test": "node ./node_modules/mocha/bin/mocha --compilers js:babel-core/register tests/",
     "code-check": "eslint --ext .js --ext .jsx src",
     "cover": "node ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/mocha --require babel-core/register tests/",
     "build": "node ./node_modules/babel-cli/bin/babel.js src -d lib --copy-files"
@@ -35,7 +35,9 @@
     "eslint-config-google": "^0.9.1",
     "mocha": "^5.2.0",
     "nock": "^9.6.1",
-    "nyc": "^13.0.1"
+    "nyc": "^13.0.1",
+    "rewire": "^4.0.1",
+    "sinon": "^7.1.1"
   },
   "dependencies": {
     "axios": "^0.18.0",

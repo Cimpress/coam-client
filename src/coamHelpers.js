@@ -1,275 +1,149 @@
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
-
-const defaultRequestData = (accessToken, additionalRequest) => {
-    return Object.assign({}, {
-        baseURL: `https://api.cimpress.io/auth/access-management`,
-        timeout: 799,
-        headers: {
-            'Authorization': 'Bearer ' + accessToken,
-        },
-    }, additionalRequest);
-};
-
-const exec = (data) => {
-    let instance = axios.create();
-
-    axiosRetry(instance, {
-        retries: 3,
-        retryCondition: (error) => axiosRetry.isNetworkOrIdempotentRequestError(error) || (error && error.response && error.response.status === 403),
-        retryDelay: (retryCount) => {
-            return 200;
-        },
-    });
-
-    return instance.request(data)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((err) => {
-            // eslint-disable-next-line no-console
-            console.error(err);
-            throw err;
-        });
-};
+let CoamClient = require('./CoamClient');
 
 const hasPermission = (accessToken, principal, resourceType, resourceIdentifier, permission) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/principals/${encodeURIComponent(principal)}/permissions/${encodeURIComponent(resourceType)}/${encodeURIComponent(resourceIdentifier)}/${encodeURIComponent(permission)}?skipCache=${Math.random()}`,
-        method: 'GET',
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data)
-        .then(() => Promise.resolve(true))
-        .catch(() => Promise.resolve(false));
+    return client.hasPermission(principal, resourceType, resourceIdentifier, permission);
 };
 
 const grantRoleToPrincipal = (accessToken, groupUrl, principal, roleName) => {
-    return getGroupInfo(accessToken, groupUrl)
-        .then((groupInfo) => {
-            if (!groupInfo) {
-                return Promise.reject('Failed to retrieve template COAM group.');
-            }
-            return addGroupMember(accessToken, groupInfo.id, principal, false)
-                .then(() => patchUserRoles(accessToken, groupInfo.id, principal, {'add': [roleName]})
-                );
-        });
+    const client = new CoamClient({
+        accessToken: accessToken,
+    });
+    return client.grantRoleToPrincipal(groupUrl, principal, roleName);
 };
 
 
 const getGroupInfo = (accessToken, groupUrl) => {
-    let data = defaultRequestData(accessToken, {
-        url: `${groupUrl}?canonicalize=true&${Math.random() * 1000000}`,
-        method: 'GET',
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.getGroupInfo(groupUrl);
 };
 
 
 const setAdminFlag = (accessToken, groupId, principal, isAdmin) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/members/${encodeURIComponent(principal)}`,
-        method: 'PATCH',
-        data: {
-            'is_admin': isAdmin,
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.setAdminFlag(groupId, principal, isAdmin);
 };
 
 const removeUserRole = (accessToken, groupId, principal, role) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/members/${encodeURIComponent(principal)}/roles`,
-        method: 'PATCH',
-        data: {
-            'remove': [role],
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.removeUserRole(groupId, principal, role);
 };
 
 const addUserRole = (accessToken, groupId, principal, role) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/members/${encodeURIComponent(principal)}/roles`,
-        method: 'PATCH',
-        data: {
-            'add': [role],
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.addUserRole(groupId, principal, role);
 };
 
 const group56 = (accessToken, principal) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/principals/${encodeURIComponent(principal)}/groups?${Math.random() * 1000000}`,
-        method: 'GET',
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data).then((data) => !!data.groups.find((a) => a.id === '56'));
+    return client.group56(principal);
 };
 
-const patchUserRoles = (accessToken, groupId, principal, rolesChanges) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/members/${encodeURIComponent(principal)}/roles`,
-        method: 'PATCH',
-        data: rolesChanges,
+const modifyUserRoles = (accessToken, groupId, principal, rolesChanges) => {
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.modifyUserRoles(groupId, principal, rolesChanges);
 };
 
 const addGroupMember = (accessToken, groupId, principal, isAdmin) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/members`,
-        method: 'PATCH',
-        data: {
-            'add': [{
-                is_admin: !!isAdmin,
-                principal: principal,
-            }],
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.addGroupMember(groupId, principal, isAdmin);
 };
 
-const deleteGroupMember = (accessToken, groupId, principal) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/members`,
-        method: 'PATCH',
-        data: {
-            'remove': [principal],
-        },
+const removeGroupMember = (accessToken, groupId, principal) => {
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.removeGroupMember(groupId, principal);
 };
 
 const getRoles = (accessToken) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/roles`,
-        method: 'GET',
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.getRoles();
 };
 
-const searchPrincipals = (accessToken, query) => {
-    if (!query || query.length == 0) {
-        return Promise.resolve([]);
-    }
-
-    let data = defaultRequestData(accessToken, {
-        url: '/v1/search/canonicalPrincipals/bySubstring',
-        method: 'GET',
-        params: {
-            q: query,
-            canonicalize: true,
-            m: Math.random() * 1000000,
-        },
+const findPrincipals = (accessToken, query) => {
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    // [{user_id / name / email}]
-    return exec(data).then((p) => p.canonical_principals);
+    return client.findPrincipals(query);
 };
 
 const createGroup = (accessToken, name, description) => {
-    let data = defaultRequestData(accessToken, {
-        url: '/v1/groups',
-        method: 'POST',
-        data: {
-            name: name,
-            description: description,
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    // [{user_id / name / email}]
-    return exec(data).then((p) => p.canonical_principals);
+    return client.createGroup(name, description);
 };
 
-const deleteGroup = (accessToken, groupId) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}`,
-        method: 'DELETE',
+const removeGroup = (accessToken, groupId) => {
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.removeGroup(groupId);
 };
 
 const findGroups = (accessToken, resourceType, resourceIdentifier) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups`,
-        method: 'GET',
-        params: {
-            resource_type: resourceType,
-            resource_identifier: resourceIdentifier,
-            cache_bust: Math.random() * 1000000,
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.findGroups(resourceType, resourceIdentifier);
 };
 
 const removeResourceFromGroup = (accessToken, groupId, resourceType, resourceId) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/resources`,
-        method: 'PATCH',
-        data: {
-            add: [],
-            remove: [{
-                resource_type: resourceType,
-                resource_identifier: resourceId,
-            }],
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.removeResourceFromGroup(groupId, resourceType, resourceId);
 };
 
 const addResourceToGroup = (accessToken, groupId, resourceType, resourceId) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/groups/${groupId}/resources`,
-        method: 'PATCH',
-        data: {
-            add: [{
-                resource_type: resourceType,
-                resource_identifier: resourceId,
-            }],
-            remove: [],
-        },
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.addResourceToGroup(groupId, resourceType, resourceId);
 };
 
 const getUserPermissionsForResourceType = (accessToken, principal, resourceType) => {
-    let data = defaultRequestData(accessToken, {
-        url: `/v1/principals/${encodeURIComponent(principal)}/permissions/${encodeURIComponent(resourceType)}`,
-        method: 'GET',
+    const client = new CoamClient({
+        accessToken: accessToken,
     });
-
-    return exec(data);
+    return client.getUserPermissionsForResourceType(principal, resourceType);
 };
 
 export {
-
     getRoles,
-    patchUserRoles,
-    removeUserRole,
-    addUserRole,
+
     grantRoleToPrincipal,
+    addUserRole,
+    removeUserRole,
+    modifyUserRoles,
 
     setAdminFlag,
+
     createGroup,
-    deleteGroup,
-    findGroups,
+    removeGroup,
     getGroupInfo,
     addGroupMember,
-    deleteGroupMember,
+    removeGroupMember,
+
     group56,
 
     addResourceToGroup,
@@ -278,5 +152,6 @@ export {
     hasPermission,
     getUserPermissionsForResourceType,
 
-    searchPrincipals,
+    findGroups,
+    findPrincipals,
 };
