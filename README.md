@@ -32,7 +32,6 @@ by the `options` parameter passed in the constructor.
 * setAdminFlag(groupId, principal, isAdmin)
 * removeUserRole(groupId, principal, role)
 * addUserRole(groupId, principal, role)
-* group56(principal)
 * modifyUserRoles(groupId, principal, rolesChanges)
 * addGroupMember(groupId, principal, isAdmin)
 * removeGroupMember(groupId, principal)
