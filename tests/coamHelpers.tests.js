@@ -22,6 +22,7 @@ describe('COAM Helpers', function() {
         'removeResourceFromGroup',
         'hasPermission',
         'getUserPermissionsForResourceType',
+        'getPrincipal',
         'findPrincipals',
     ].forEach((helperName) => {
         it(`${helperName} method calls appropriate client method`, function() {
@@ -44,6 +45,7 @@ describe('COAM Helpers', function() {
                 removeResourceFromGroup: sinon.spy(),
                 hasPermission: sinon.spy(),
                 getUserPermissionsForResourceType: sinon.spy(),
+                getPrincipal: sinon.spy(),
                 findPrincipals: sinon.spy(),
             };
 
