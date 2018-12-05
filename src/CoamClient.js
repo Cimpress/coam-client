@@ -1,6 +1,7 @@
 const axios = require('axios');
 const axiosRetry = require('axios-retry');
 const {pope} = require('pope');
+const PrincipalNotFound = require('./errors/PrincipalNotFound');
 
 const DEFAULT_BASE_URL = 'https://api.cimpress.io';
 
@@ -289,6 +290,20 @@ class CoamClient {
 
         // [{user_id / name / email}]
         return this.__exec(data).then((p) => p.canonical_principals);
+    }
+
+    getPrincipal(principal) {
+        let data = this.__config({
+            url: `/auth/access-management/v1/principals/${encodeURIComponent(principal)}`,
+            method: 'GET',
+            params: {
+                skipCache: Math.random(),
+            },
+        });
+        return this.__exec(data)
+            .catch(err => {
+                return Promise.reject(new PrincipalNotFound("Principal not found", err));
+            });
     }
 
     createGroup(name, description) {
