@@ -6,18 +6,27 @@ const DEFAULT_BASE_URL = 'https://api.cimpress.io';
 
 class CoamClient {
     constructor(options) {
-        this.baseUrl = options.baseUrl || DEFAULT_BASE_URL;
-        this.timeout = options.timeout || 1000;
-        this.accessToken = options.accessToken || undefined;
-        this.retryAttempts = options.retryAttempts || 2;
-        this.retryDelayInMs = options.retryDelayInMs || 200;
-        this.retryOnForbidden = options.retryOnForbidden || true;
+        let opts = options || {};
+        this.baseUrl = opts.baseUrl || DEFAULT_BASE_URL;
+        this.timeout = opts.timeout || 1000;
+        this.accessToken = opts.accessToken || undefined;
+        this.retryAttempts = opts.retryAttempts || 2;
+        this.retryDelayInMs = opts.retryDelayInMs || 200;
+        this.retryOnForbidden = 'retryOnForbidden' in opts ? opts.retryOnForbidden : true;
+        this.debugFunction = 'debugFunction' in opts ? opts.debugFunction : undefined;
+        // eslint-disable-next-line
+        this.errorFunction = 'errorFunction' in opts ? opts.errorFunction : console.error;
 
-        let understoodOptions = ['baseUrl', 'accessToken', 'timeout', 'retryAttempts', 'retryDelayInMs', 'retryOnForbidden'];
-        Object.keys(options).forEach((passedOption) => {
-            if (understoodOptions.indexOf(passedOption) === -1) {
+        this.logPrefix = '[CoamClient]';
+
+        let validOptions = ['baseUrl', 'accessToken', 'timeout',
+            'retryAttempts', 'retryDelayInMs', 'retryOnForbidden',
+            'debugFunction', 'errorFunction'];
+
+        Object.keys(opts).forEach((passedOption) => {
+            if (validOptions.indexOf(passedOption) === -1) {
                 // eslint-disable-next-line no-console
-                console.error(`[CoamClient] Option '${passedOption}' is not understood and will be ignored.`);
+                this.__logError(`${this.logPrefix} Option '${passedOption}' is not understood and will be ignored.`);
             }
         });
 
@@ -54,8 +63,7 @@ class CoamClient {
                 return response.data;
             })
             .catch((err) => {
-                // eslint-disable-next-line no-console
-                console.error(err);
+                this.__logError(err);
                 throw err;
             });
     }
@@ -72,6 +80,18 @@ class CoamClient {
         let encoded = {};
         Object.keys(dataToEncode).forEach( (k) => encoded[k] = encodeURIComponent(dataToEncode[k]));
         return pope(urlPattern, encoded);
+    }
+
+    __logDebug(...args) {
+        if (this.debugFunction) {
+            this.debugFunction.apply(null, args);
+        }
+    }
+
+    __logError(...args) {
+        if (this.errorFunction) {
+            this.errorFunction.apply(null, args);
+        }
     }
 
     hasPermission(principal, resourceType, resourceIdentifier, permission) {
@@ -93,7 +113,10 @@ class CoamClient {
 
         return this.__exec(data)
             .then(() => Promise.resolve(true))
-            .catch(() => Promise.resolve(false));
+            .catch((e) => {
+                this.__logError(this.logPrefix, e);
+                return Promise.resolve(false);
+            });
     }
 
     grantRoleToPrincipal(groupUrl, principal, roleName) {
