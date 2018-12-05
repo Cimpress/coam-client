@@ -86,13 +86,6 @@ const findPrincipals = (accessToken, query) => {
     return client.findPrincipals(query);
 };
 
-const getPrincipal = (accessToken, principal) => {
-    const client = new CoamClient({
-        accessToken: accessToken,
-    });
-    return client.getPrincipal(principal);
-};
-
 const createGroup = (accessToken, name, description) => {
     const client = new CoamClient({
         accessToken: accessToken,
@@ -135,7 +128,7 @@ const getUserPermissionsForResourceType = (accessToken, principal, resourceType)
     return client.getUserPermissionsForResourceType(principal, resourceType);
 };
 
-module.exports = {
+export {
     getRoles,
 
     grantRoleToPrincipal,
@@ -161,5 +154,4 @@ module.exports = {
 
     findGroups,
     findPrincipals,
-    getPrincipal,
 };

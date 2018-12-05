@@ -18,8 +18,7 @@ const {getRoles,
     removeResourceFromGroup,
     hasPermission,
     getUserPermissionsForResourceType,
-    findPrincipals,
-    getPrincipal} = require('./coamHelpers');
+    findPrincipals} = require('./coamHelpers');
 
 export {
     CoamClient,
@@ -49,5 +48,4 @@ export {
 
     findGroups,
     findPrincipals,
-    getPrincipal,
 };
