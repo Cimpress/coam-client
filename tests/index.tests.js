@@ -21,6 +21,7 @@ describe('Index', function() {
             'hasPermission',
             'getUserPermissionsForResourceType',
             'findGroups',
-            'findPrincipals']);
+            'findPrincipals',
+            'getPrincipal']);
     });
 });

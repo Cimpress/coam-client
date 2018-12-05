@@ -291,6 +291,20 @@ class CoamClient {
         return this.__exec(data).then((p) => p.canonical_principals);
     }
 
+    getPrincipal(principal) {
+        let url = this.__buildUrl(`/auth/access-management/v1/principals/{{principal}}`, {
+            principal,
+        });
+        let data = this.__config({
+            url,
+            method: 'GET',
+            params: {
+                skipCache: Math.random(),
+            },
+        });
+        return this.__exec(data);
+    }
+
     createGroup(name, description) {
         let data = this.__config({
             url: '/auth/access-management/v1/groups',

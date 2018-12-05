@@ -264,6 +264,39 @@ describe('CoamClient', function() {
         });
     });
 
+    it('getPrincipal', function() {
+        let requestStub = mockRequestResponse({
+                "canonical_principal": "vcuenagarcia@cimpress.com",
+                "is_client": false,
+                "is_pending": false,
+                "profile": {
+                  "_id": "dc8c45ab5c6d016efbd37ad02a7e3911",
+                  "email": "vcuenagarcia@cimpress.com",
+                  "name": "Victor Cuena Garcia",
+                  "given_name": "Victor",
+                  "family_name": "Cuena Garcia",
+                  "email_verified": true,
+                  "clientID": "G17HdNd01gAPfiSV5upbWdiDUnAU8is9",
+                  "updated_at": "2018-09-07T01:20:46.219Z",
+                  "picture": "https://s.gravatar.com/avatar/e4780d0c8212f0fbea1014e6646f395d?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fvc.png",
+                  "user_id": "adfs|vcuenagarcia@cimpress.com",
+                  "nickname": "vcuenagarcia"
+                }
+        });
+        const client = new CoamClient({accessToken: accessToken});
+
+        client.getPrincipal('asd');
+
+        calledOnceWith(requestStub, {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'GET',
+            'params': {},
+            'url': '/auth/access-management/v1/principals/asd',
+        });
+    });
+
     it('createGroup', function() {
         const client = new CoamClient({accessToken: accessToken});
 
