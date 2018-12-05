@@ -302,7 +302,7 @@ class CoamClient {
                 skipCache: Math.random(),
             },
         });
-        return this.__exec(data)
+        return this.__exec(data);
     }
 
     createGroup(name, description) {
