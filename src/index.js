@@ -1,4 +1,3 @@
-require('regenerator-runtime/runtime');
 const CoamClient = require('./CoamClient');
 
 const {getRoles,
