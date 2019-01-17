@@ -406,4 +406,18 @@ describe('CoamClient', function() {
             'url': `/auth/access-management/v1/principals/${principal}/permissions/${resourceType}`,
         });
     });
+
+    it('getUsersWithPermission', function() {
+        const client = new CoamClient({accessToken: accessToken});
+
+        client.getUsersWithPermission(resourceType, resourceIdentifier, permission);
+
+        calledOnceWith(requestStub, {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'GET',
+            'url': `/auth/access-management/v1/search/byPermission?resource_type=${resourceType}&resource_identifier=${resourceIdentifier}&permission=${permission}`,
+        });
+    });
 });
