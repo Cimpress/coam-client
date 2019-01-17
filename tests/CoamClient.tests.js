@@ -416,10 +416,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('getUsersWithPermission', function() {
+    it('getUsersWithPermission', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.getUsersWithPermission(resourceType, resourceIdentifier, permission);
+        await client.getUsersWithPermission(resourceType, resourceIdentifier, permission);
 
         calledOnceWith(requestStub, {
             'headers': {
