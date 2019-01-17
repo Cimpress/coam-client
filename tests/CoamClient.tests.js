@@ -21,7 +21,11 @@ const permission = 'xPermission';
 
 
 function calledOnceWith(requestStub, args, withNoCache = true) {
-    expect(requestStub.calledOnce).to.be.true;
+    calledWith(requestStub, args, withNoCache, 1)
+}
+
+function calledWith(requestStub, args, withNoCache = true, times = 1) {
+    expect(requestStub.callCount).to.equal(times)
     if (withNoCache && requestStub.args[0][0]['params'] && requestStub.args[0][0].method === 'GET') {
         expect(requestStub.args[0][0]['params'].skipCache).to.exist;
         delete requestStub.args[0][0]['params'].skipCache;
@@ -30,7 +34,7 @@ function calledOnceWith(requestStub, args, withNoCache = true) {
 }
 
 function mockRequestResponse(resolveWith) {
-    requestStub = sinon.stub().returns(Promise.resolve(resolveWith));
+    requestStub = sinon.stub().returns(Promise.resolve({data: resolveWith}));
     fakeAxios = {
         create: sinon.stub().returns({
             request: requestStub,
@@ -46,10 +50,11 @@ describe('CoamClient', function() {
         requestStub = mockRequestResponse('yes!');
     });
 
-    it('getGroupInfo', function() {
+    it('getGroupInfo', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.getGroupInfo(groupUrl);
+        await client.getGroupInfo(groupUrl);
+
         calledOnceWith(requestStub, {
             'headers': {
                 'Authorization': `Bearer ${accessToken}`,
@@ -62,10 +67,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('hasPermission', function() {
+    it('hasPermission', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.hasPermission(principal, resourceType, resourceIdentifier, permission);
+        await client.hasPermission(principal, resourceType, resourceIdentifier, permission);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -78,12 +83,12 @@ describe('CoamClient', function() {
         });
     });
 
-    it('grantRoleToPrincipal', function() {
+    it('grantRoleToPrincipal', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.grantRoleToPrincipal(groupUrl, principal, roleName);
+        await client.grantRoleToPrincipal(groupUrl, principal, roleName);
 
-        calledOnceWith(requestStub, {
+        calledWith(requestStub, {
             'headers': {
                 'Authorization': `Bearer ${accessToken}`,
             },
@@ -92,13 +97,13 @@ describe('CoamClient', function() {
                 'canonicalize': 'true',
             },
             'url': groupUrl,
-        });
+        }, true, 3);
     });
 
-    it('setAdminFlag', function() {
+    it('setAdminFlag', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.setAdminFlag(groupId, principal, true);
+        await client.setAdminFlag(groupId, principal, true);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -112,10 +117,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('removeUserRole', function() {
+    it('removeUserRole', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.removeUserRole(groupId, principal, roleName);
+        await client.removeUserRole(groupId, principal, roleName);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -131,10 +136,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('addUserRole', function() {
+    it('addUserRole', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.addUserRole(groupId, principal, roleName);
+        await client.addUserRole(groupId, principal, roleName);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -150,11 +155,11 @@ describe('CoamClient', function() {
         });
     });
 
-    it('group56', function() {
-        requestStub = mockRequestResponse({data: {groups: []}});
+    it('group56', async function() {
+        requestStub = mockRequestResponse({groups: []});
         const client = new CoamClient({accessToken: accessToken});
 
-        client.group56( principal);
+        await client.group56( principal);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -168,10 +173,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('modifyUserRoles', function() {
+    it('modifyUserRoles', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.modifyUserRoles(groupId, principal, {'add': [roleName]});
+        await client.modifyUserRoles(groupId, principal, {'add': [roleName]});
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -187,10 +192,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('addGroupMember', function() {
+    it('addGroupMember', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.addGroupMember(groupId, principal, true);
+        await client.addGroupMember(groupId, principal, true);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -212,10 +217,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('removeGroupMember', function() {
+    it('removeGroupMember', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.removeGroupMember(groupId, principal);
+        await client.removeGroupMember(groupId, principal);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -231,10 +236,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('getRoles', function() {
+    it('getRoles', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.getRoles();
+        await client.getRoles();
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -245,11 +250,11 @@ describe('CoamClient', function() {
         });
     });
 
-    it('findPrincipals', function() {
+    it('findPrincipals', async function() {
         let requestStub = mockRequestResponse({data: {canonical_principals: []}});
         const client = new CoamClient({accessToken: accessToken});
 
-        client.findPrincipals('asd');
+        await client.findPrincipals('asd');
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -264,7 +269,7 @@ describe('CoamClient', function() {
         });
     });
 
-    it('getPrincipal', function() {
+    it('getPrincipal', async function() {
         let requestStub = mockRequestResponse({
                 "canonical_principal": "vcuenagarcia@cimpress.com",
                 "is_client": false,
@@ -285,7 +290,7 @@ describe('CoamClient', function() {
         });
         const client = new CoamClient({accessToken: accessToken});
 
-        client.getPrincipal('asd');
+        await client.getPrincipal('asd');
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -297,10 +302,14 @@ describe('CoamClient', function() {
         });
     });
 
-    it('createGroup', function() {
+    it('createGroup', async function() {
+        let requestStub = mockRequestResponse({
+            "canonical_principal": "vcuenagarcia@cimpress.com"
+        });
+
         const client = new CoamClient({accessToken: accessToken});
 
-        client.createGroup('name', 'desc');
+        await client.createGroup('name', 'desc');
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -315,10 +324,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('removeGroup', function() {
+    it('removeGroup', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.removeGroup(groupId);
+        await client.removeGroup(groupId);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -329,11 +338,11 @@ describe('CoamClient', function() {
         });
     });
 
-    it('findGroups', function() {
+    it('findGroups', async function() {
         let requestStub = mockRequestResponse({data: {canonical_principals: []}});
         const client = new CoamClient({accessToken: accessToken});
 
-        client.findGroups(resourceType, resourceIdentifier);
+        await client.findGroups(resourceType, resourceIdentifier);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -348,11 +357,11 @@ describe('CoamClient', function() {
         });
     });
 
-    it('addResourceToGroup', function() {
+    it('addResourceToGroup', async function() {
         let requestStub = mockRequestResponse({data: {canonical_principals: []}});
         const client = new CoamClient({accessToken: accessToken});
 
-        client.addResourceToGroup(groupId, resourceType, resourceIdentifier);
+        await client.addResourceToGroup(groupId, resourceType, resourceIdentifier);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -372,10 +381,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('removeResourceFromGroup', function() {
+    it('removeResourceFromGroup', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.removeResourceFromGroup(groupId, resourceType, resourceIdentifier);
+        await client.removeResourceFromGroup(groupId, resourceType, resourceIdentifier);
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -393,10 +402,10 @@ describe('CoamClient', function() {
         });
     });
 
-    it('getUserPermissionsForResourceType', function() {
+    it('getUserPermissionsForResourceType', async function() {
         const client = new CoamClient({accessToken: accessToken});
 
-        client.getUserPermissionsForResourceType(principal, resourceType);
+        await client.getUserPermissionsForResourceType(principal, resourceType);
 
         calledOnceWith(requestStub, {
             'headers': {
