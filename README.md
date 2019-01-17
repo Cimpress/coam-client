@@ -44,6 +44,7 @@ by the `options` parameter passed in the constructor.
 * removeResourceFromGroup(groupId, resourceType, resourceId)
 * addResourceToGroup(groupId, resourceType, resourceId)
 * getUserPermissionsForResourceType(principal, resourceType)
+* getUsersWithPermission(resourceType, resourceIdentifier, permission)
 
 #### Direct helper functions
 In some cases, it is easier to simply call a function to perform the required action
@@ -70,5 +71,6 @@ Here is a list of helpers (name + required parameters):
 * **removeResourceFromGroup** (accessToken, groupId, resourceType, resourceId) 
 * **addResourceToGroup** (accessToken, groupId, resourceType, resourceId) 
 * **getUserPermissionsForResourceType** (accessToken, principal, resourceType)
+* **getUsersWithPermission** (accessToken, resourceType, resourceIdentifier, permission)
 
 **Important**: All helper methods are using the CoamClient class with default settings (see above).  
