@@ -399,6 +399,22 @@ class CoamClient {
 
         return this.__exec(data);
     }
+
+    getUsersWithPermission(resourceType, resourceIdentifier, permission) {
+        let url = this.__buildUrl(`/auth/access-management/v1/search/byPermission?resource_type={{resourceType}}&resource_identifier={{resourceIdentifier}}&permission={{permission}}`, {
+            resourceType,
+            resourceIdentifier,
+            permission,
+        });
+
+        let data = this.__config({
+            url: url,
+            method: 'GET',
+        });
+
+        // [{user_id / name / email}]
+        return this.__exec(data).then((p) => p.canonical_principals);
+    }
 }
 
 module.exports = CoamClient;
