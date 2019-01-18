@@ -52,6 +52,7 @@ class CoamClient {
                 retryDelay: (retryCount) => {
                     return this.retryDelayInMs;
                 },
+                shouldResetTimeout: true,
             });
         }
     }
