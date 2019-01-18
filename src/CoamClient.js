@@ -401,7 +401,7 @@ class CoamClient {
     }
 
     getUsersWithPermission(resourceType, resourceIdentifier, permission) {
-        let url = this.__buildUrl(`/auth/access-management/v1/search/byPermission?resource_type={{resourceType}}&resource_identifier={{resourceIdentifier}}&permission={{permission}}`, {
+        let url = this.__buildUrl(`/auth/access-management/v1/search/canonicalPrincipals/byPermission?resource_type={{resourceType}}&resource_identifier={{resourceIdentifier}}&permission={{permission}}`, {
             resourceType,
             resourceIdentifier,
             permission,
