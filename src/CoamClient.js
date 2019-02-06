@@ -317,7 +317,7 @@ class CoamClient {
         });
 
         // [{user_id / name / email}]
-        return this.__exec(data).then((p) => p.canonical_principals);
+        return this.__exec(data);
     }
 
     removeGroup(groupId) {
