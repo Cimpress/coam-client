@@ -7,7 +7,7 @@ If you like to add a method (or tweak something), please open a pull-request. We
 But we also love solving issues, so in case you don't really have the time for a pull-request right now,
 maybe you can [just tell us what you'd like](https://github.com/Cimpress/coam-client/issues)? 
 
-Or maybe you just feel like [writting us a mail](mailto:TrdelnikSquad@cimpress.io)? Yes, you guessed right, we also love reading mails ;) 
+Or maybe you just feel like [writing us a mail](mailto:TrdelnikSquad@cimpress.io)? Yes, you guessed right, we also love reading mails ;) 
 
 
 #### CoamClient class
@@ -45,6 +45,7 @@ by the `options` parameter passed in the constructor.
 * addResourceToGroup(groupId, resourceType, resourceId)
 * getUserPermissionsForResourceType(principal, resourceType)
 * getUsersWithPermission(resourceType, resourceIdentifier, permission)
+* createGroupWithUser(principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd)
 
 #### Direct helper functions
 In some cases, it is easier to simply call a function to perform the required action
@@ -72,5 +73,6 @@ Here is a list of helpers (name + required parameters):
 * **addResourceToGroup** (accessToken, groupId, resourceType, resourceId) 
 * **getUserPermissionsForResourceType** (accessToken, principal, resourceType)
 * **getUsersWithPermission** (accessToken, resourceType, resourceIdentifier, permission)
+* **createGroupWithUser** (accessToken, principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd)
 
 **Important**: All helper methods are using the CoamClient class with default settings (see above).  
