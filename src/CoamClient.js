@@ -416,6 +416,31 @@ class CoamClient {
         // [{user_id / name / email}]
         return this.__exec(data).then((p) => p.canonical_principals);
     }
+
+
+    async createGroupWithUser(principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd) {
+        let res = await this.createGroup(groupName, groupDescription);
+        let groupId = res.id;
+
+        await this.addGroupMember(groupId, principalToAddToGroup);
+        await this.setAdminFlag(groupId, principalToAddToGroup, true);
+        for (let i = 0; i < rolesToAdd.length; i++) {
+            await this.addUserRole(groupId, principalToAddToGroup, rolesToAdd[i]);
+        }
+        for (let i = 0; i < resourcesToAdd.length; i++) {
+            let resource = resourcesToAdd[i];
+            await this.addResourceToGroup(groupId, resource.resourceType, resource.resourceId);
+        }
+        try {
+            await this.removeGroupMember(groupId, principalToCreateGroup);
+        } catch (err) {
+            //  Removing the creator of a COAM group causes a 404, known issue
+            if (err.response.status !== 404) {
+                throw err;
+            }
+        }
+        return groupId;
+    }
 }
 
 module.exports = CoamClient;

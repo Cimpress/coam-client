@@ -33,6 +33,10 @@ function calledWith(requestStub, args, withNoCache = true, times = 1) {
     expect(requestStub.args[0]).to.deep.equal([args]);
 }
 
+function calledWithAtExactSequence(requestStub, sequenceNo, args) {
+    expect(requestStub.getCall(sequenceNo).args).to.deep.equal([args]);
+}
+
 function mockRequestResponse(resolveWith) {
     requestStub = sinon.stub().returns(Promise.resolve({data: resolveWith}));
     fakeAxios = {
@@ -43,6 +47,10 @@ function mockRequestResponse(resolveWith) {
     CoamClient.__set__('axios', fakeAxios);
 
     return requestStub;
+}
+
+function mockRequestResponseWithExactArgs(requestStub, args, resolveWith = undefined) {
+    requestStub.withArgs(args).returns(Promise.resolve({data: resolveWith}));
 }
 
 describe('CoamClient', function() {
@@ -315,7 +323,7 @@ describe('CoamClient', function() {
                     'principal': 'string',
                     'roles': [
                         'string',
-            ],
+                    ],
                 },
             ],
             'resources': [
@@ -330,7 +338,7 @@ describe('CoamClient', function() {
                         'identifier': 'string',
                         'permissions': [
                             'string',
-                ],
+                        ],
                     },
                 ],
             },
@@ -460,5 +468,132 @@ describe('CoamClient', function() {
             'method': 'GET',
             'url': `/auth/access-management/v1/search/canonicalPrincipals/byPermission?resource_type=${resourceType}&resource_identifier=${resourceIdentifier}&permission=${permission}`,
         });
+    });
+
+
+    it('createGroupWithUser', async function() {
+        // define the user and group details that we want to use for this test
+        const principalToCreateGroup = 'principal-that-creates-the-group';
+        const principalToAddToGroup = 'principal-to-add-to-group';
+        const groupName = 'unit-test-group';
+        const groupId = 'unit-test-group-id';
+        const groupDescription = 'unit-test-group-desc';
+        const rolesToAdd = ['unit-test-role-1', 'unit-test-role-2'];
+        const resourcesToAdd = [{resourceType: 'rt-unit-test-1', resourceId: 'id-unit-test-1'}, {resourceType: 'rt-unit-test-2', resourceId: 'id-unit-test-2'}];
+
+        // define all the arguments and return values
+        const newGroupDescription = {
+            'name': groupName,
+            'description': groupDescription,
+            'id': groupId,
+        };
+        const createGroupArgs = {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'POST',
+            'data': {
+                'description': groupDescription,
+                'name': groupName,
+            },
+            'url': `/auth/access-management/v1/groups`,
+        };
+        const addMemberArgs = {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'PATCH',
+            'data': {
+                'add': [
+                    {
+                        'is_admin': false,
+                        'principal': principalToAddToGroup,
+                    },
+                ],
+            },
+            'params': {
+                'canonicalize': true,
+            },
+            'url': `/auth/access-management/v1/groups/${groupId}/members`,
+        };
+        const setAdminFlagArgs = {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'PATCH',
+            'data': {
+                'is_admin': true,
+            },
+            'url': `/auth/access-management/v1/groups/${groupId}/members/${principalToAddToGroup}`,
+        };
+        const principalRolesArgs = rolesToAdd.map((r) => ({
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'PATCH',
+            'data': {
+                'add': [r],
+            },
+            'url': `/auth/access-management/v1/groups/${groupId}/members/${principalToAddToGroup}/roles`,
+        }));
+        const principalResourcesArgs = resourcesToAdd.map((r) => ({
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'PATCH',
+            'data': {
+                'add': [
+                    {
+                        'resource_identifier': r.resourceId,
+                        'resource_type': r.resourceType,
+                    },
+                ],
+                'remove': [],
+            },
+            'url': `/auth/access-management/v1/groups/${groupId}/resources`,
+        }));
+        const removeCreatorArgs = {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'PATCH',
+            'data': {
+                'remove': [
+                    principalToCreateGroup,
+                ],
+            },
+            'url': `/auth/access-management/v1/groups/${groupId}/members`,
+        };
+
+        // mock the responses with the exact arguments
+        mockRequestResponseWithExactArgs(requestStub, createGroupArgs, newGroupDescription);
+        mockRequestResponseWithExactArgs(requestStub, addMemberArgs);
+        mockRequestResponseWithExactArgs(requestStub, setAdminFlagArgs);
+        for (let i = 0; i < principalRolesArgs.length; i++) {
+            mockRequestResponseWithExactArgs(requestStub, principalRolesArgs[i]);
+        }
+        for (let i = 0; i < principalResourcesArgs.length; i++) {
+            mockRequestResponseWithExactArgs(requestStub, principalResourcesArgs[i]);
+        }
+        mockRequestResponseWithExactArgs(requestStub, removeCreatorArgs);
+
+        // execute the actual test
+        const client = new CoamClient({accessToken: accessToken});
+
+        await client.createGroupWithUser(principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd);
+
+        // validate that the exact sequence was executed
+        expect(requestStub.callCount).to.equal(4 + principalRolesArgs.length + principalResourcesArgs.length);
+        let i = 0;
+        calledWithAtExactSequence(requestStub, i++, createGroupArgs);
+        calledWithAtExactSequence(requestStub, i++, addMemberArgs);
+        calledWithAtExactSequence(requestStub, i++, setAdminFlagArgs);
+        for (let j = 0; j < principalRolesArgs.length; j++) {
+            calledWithAtExactSequence(requestStub, i++, principalRolesArgs[j]);
+        }
+        for (let j = 0; j < principalResourcesArgs.length; j++) {
+            calledWithAtExactSequence(requestStub, i++, principalResourcesArgs[j]);
+        }
+        calledWithAtExactSequence(requestStub, i++, removeCreatorArgs);
     });
 });
