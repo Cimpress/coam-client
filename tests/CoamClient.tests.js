@@ -304,36 +304,36 @@ describe('CoamClient', function() {
 
     it('createGroup', async function() {
         let newGroupDescription = {
-            "name": "string",
-            "description": "string",
-            "id": "123",
-            "created_by": "string",
-            "created_at": "2019-02-06T08:02:09.419Z",
-            "members": [
+            'name': 'string',
+            'description': 'string',
+            'id': '123',
+            'created_by': 'string',
+            'created_at': '2019-02-06T08:02:09.419Z',
+            'members': [
                 {
-                    "is_admin": true,
-                    "principal": "string",
-                    "roles": [
-                        "string"
-                    ]
-                }
+                    'is_admin': true,
+                    'principal': 'string',
+                    'roles': [
+                        'string',
             ],
-            "resources": [
+                },
+            ],
+            'resources': [
                 {
-                    "resource_type": "string",
-                    "resource_identifier": "string"
-                }
+                    'resource_type': 'string',
+                    'resource_identifier': 'string',
+                },
             ],
-            "permissions": {
-                "additionalProp1": [
+            'permissions': {
+                'additionalProp1': [
                     {
-                        "identifier": "string",
-                        "permissions": [
-                            "string"
-                        ]
-                    }
+                        'identifier': 'string',
+                        'permissions': [
+                            'string',
                 ],
-            }
+                    },
+                ],
+            },
         };
         let requestStub = mockRequestResponse(newGroupDescription);
 
@@ -341,7 +341,7 @@ describe('CoamClient', function() {
 
         let result = await client.createGroup('name', 'desc');
 
-        expect(result).to.deep.equal(newGroupDescription)
+        expect(result).to.deep.equal(newGroupDescription);
 
         calledOnceWith(requestStub, {
             'headers': {
