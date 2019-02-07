@@ -142,6 +142,13 @@ const getUsersWithPermission = (accessToken, resourceType, resourceIdentifier, p
     return client.getUsersWithPermission(resourceType, resourceIdentifier, permission);
 };
 
+const createGroupWithUser = (accessToken, principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd) => {
+    const client = new CoamClient({
+        accessToken: accessToken,
+    });
+    return client.createGroupWithUser(principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd);
+};
+
 module.exports = {
     getRoles,
 
@@ -171,4 +178,6 @@ module.exports = {
     getPrincipal,
 
     getUsersWithPermission,
+
+    createGroupWithUser,
 };
