@@ -95,6 +95,10 @@ class CoamClient {
         }
     }
 
+    buildGroupUrlFromId(groupId) {
+        return `${this.baseUrl}/auth/access-management/v1/groups/${groupId}`;
+    }
+
     hasPermission(principal, resourceType, resourceIdentifier, permission) {
         let url = this.__buildUrl(
             `/auth/access-management/v1/principals/{{principal}}/permissions/{{resourceType}}/{{resourceIdentifier}}/{{permission}}`, {
