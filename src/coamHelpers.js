@@ -1,5 +1,10 @@
 let CoamClient = require('./CoamClient');
 
+const buildGroupUrlFromId = (groupId) => {
+    const client = new CoamClient();
+    return client.buildGroupUrlFromId(groupId);
+};
+
 const hasPermission = (accessToken, principal, resourceType, resourceIdentifier, permission) => {
     const client = new CoamClient({
         accessToken: accessToken,
@@ -14,14 +19,12 @@ const grantRoleToPrincipal = (accessToken, groupUrl, principal, roleName) => {
     return client.grantRoleToPrincipal(groupUrl, principal, roleName);
 };
 
-
 const getGroupInfo = (accessToken, groupUrl) => {
     const client = new CoamClient({
         accessToken: accessToken,
     });
     return client.getGroupInfo(groupUrl);
 };
-
 
 const setAdminFlag = (accessToken, groupId, principal, isAdmin) => {
     const client = new CoamClient({
@@ -166,6 +169,7 @@ module.exports = {
     removeGroupMember,
 
     group56,
+    buildGroupUrlFromId,
 
     addResourceToGroup,
     removeResourceFromGroup,

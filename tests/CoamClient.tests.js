@@ -58,7 +58,7 @@ describe('CoamClient', function() {
         requestStub = mockRequestResponse('yes!');
     });
 
-    it("buildGroupIdFromUrl", function() {
+    it("buildGroupUrlFromId", function() {
       const baseUrl = "https://www.example.com";
       const client = new CoamClient({ baseUrl });
       const groupId = 12345;
@@ -66,7 +66,6 @@ describe('CoamClient', function() {
       const actual = client.buildGroupUrlFromId(groupId);
 
       expect(actual).to.equal(`${baseUrl}/auth/access-management/v1/groups/${groupId}`);
-
     });
 
     it('getGroupInfo', async function() {

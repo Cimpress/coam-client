@@ -13,6 +13,7 @@ const {getRoles,
     addGroupMember,
     removeGroupMember,
     group56,
+    buildGroupUrlFromId,
     addResourceToGroup,
     removeResourceFromGroup,
     hasPermission,
@@ -39,6 +40,7 @@ export {
     removeGroupMember,
 
     group56,
+    buildGroupUrlFromId,
 
     addResourceToGroup,
     removeResourceFromGroup,

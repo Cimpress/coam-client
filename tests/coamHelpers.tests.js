@@ -42,6 +42,7 @@ describe('COAM Helpers', function() {
                 addGroupMember: sinon.spy(),
                 removeGroupMember: sinon.spy(),
                 group56: sinon.spy(),
+                buildGroupUrlFromId: sinon.spy(),
                 addResourceToGroup: sinon.spy(),
                 removeResourceFromGroup: sinon.spy(),
                 hasPermission: sinon.spy(),
