@@ -16,6 +16,7 @@ describe('Index', function() {
             'addGroupMember',
             'removeGroupMember',
             'group56',
+            'buildGroupUrlFromId',
             'addResourceToGroup',
             'removeResourceFromGroup',
             'hasPermission',

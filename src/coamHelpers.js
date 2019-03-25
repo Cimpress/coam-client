@@ -1,5 +1,10 @@
 let CoamClient = require('./CoamClient');
 
+const buildGroupUrlFromId = (groupId) => {
+    const client = new CoamClient();
+    return client.buildGroupUrlFromId(groupId);
+};
+
 const hasPermission = (accessToken, principal, resourceType, resourceIdentifier, permission) => {
     const client = new CoamClient({
         accessToken: accessToken,
@@ -166,6 +171,7 @@ module.exports = {
     removeGroupMember,
 
     group56,
+    buildGroupUrlFromId,
 
     addResourceToGroup,
     removeResourceFromGroup,
