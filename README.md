@@ -27,6 +27,7 @@ by the `options` parameter passed in the constructor.
 * _timeout_ - A value setting the timeout of the underlying HTTP calls to COAM. Defaults to 10000 (10 seconds). Set it to 0 for no timeout.
 
 ###### Provided methods 
+* buildGroupUrlFromId(groupId)
 * hasPermission(principal, resourceType, resourceIdentifier, permission)
 * grantRoleToPrincipal(groupUrl, principal, roleName)
 * getGroupInfo(groupUrl)
@@ -55,6 +56,7 @@ needs by creating a default client and performing the necessary requests.
 
 Here is a list of helpers (name + required parameters):
 
+* **buildGroupUrlFromId**(groupId)
 * **hasPermission**(accessToken, principal, resourceType, resourceIdentifier, permission) 
 * **grantRoleToPrincipal** (accessToken, groupUrl, principal, roleName) 
 * **getGroupInfo** (accessToken, groupUrl) 
