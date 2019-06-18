@@ -58,14 +58,14 @@ describe('CoamClient', function() {
         requestStub = mockRequestResponse('yes!');
     });
 
-    it("buildGroupUrlFromId", function() {
-      const baseUrl = "https://www.example.com";
-      const client = new CoamClient({ baseUrl });
-      const groupId = 12345;
+    it('buildGroupUrlFromId', function() {
+        const baseUrl = 'https://www.example.com';
+        const client = new CoamClient({baseUrl});
+        const groupId = 12345;
 
-      const actual = client.buildGroupUrlFromId(groupId);
+        const actual = client.buildGroupUrlFromId(groupId);
 
-      expect(actual).to.equal(`${baseUrl}/auth/access-management/v1/groups/${groupId}`);
+        expect(actual).to.equal(`${baseUrl}/auth/access-management/v1/groups/${groupId}`);
     });
 
     it('getGroupInfo', async function() {
@@ -467,16 +467,29 @@ describe('CoamClient', function() {
     });
 
     it('getUsersWithPermission', async function() {
-        const client = new CoamClient({accessToken: accessToken});
+        let client = new CoamClient({accessToken: accessToken});
 
+        // Works when specifying resourceIdentifier
         await client.getUsersWithPermission(resourceType, resourceIdentifier, permission);
-
         calledOnceWith(requestStub, {
             'headers': {
                 'Authorization': `Bearer ${accessToken}`,
             },
             'method': 'GET',
             'url': `/auth/access-management/v1/search/canonicalPrincipals/byPermission?resource_type=${resourceType}&resource_identifier=${resourceIdentifier}&permission=${permission}`,
+        });
+
+        // Works without specifying resourceIdentifier
+        requestStub = mockRequestResponse('yes!');
+        client = new CoamClient({accessToken: accessToken});
+        await client.getUsersWithPermission(resourceType, undefined, permission);
+
+        calledOnceWith(requestStub, {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'GET',
+            'url': `/auth/access-management/v1/search/canonicalPrincipals/byPermission?resource_type=${resourceType}&permission=${permission}`,
         });
     });
 
