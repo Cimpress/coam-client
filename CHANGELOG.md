@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.1.14] - 2019.06.18
+### Changed
+- Allow getUsersWithPermission to be called with an undefined resourceIdentifier, as this parameter is now optional in the COAM API
+
 ## [0.1.13] - 2019.06.06
 ### Changed
 - Downgrade axios until a fix for axios-retry is avaialble
