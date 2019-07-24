@@ -34,6 +34,14 @@ class CoamClient {
             baseURL: this.baseUrl,
             timeout: this.timeout,
         });
+        this.instance.interceptors.response.use((response) => response, (error) => {
+            let newError = error && error.response && {
+                data: error.response.data,
+                status: error.response.status,
+                headers: error.response.headers,
+            } || error.message && {message: error.message, code: error.code, stack: error.stack} || error;
+            throw newError;
+        });
 
         if (this.retryAttempts > 0) {
             axiosRetry(this.instance, {

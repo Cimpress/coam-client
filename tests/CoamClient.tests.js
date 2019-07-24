@@ -42,6 +42,11 @@ function mockRequestResponse(resolveWith) {
     fakeAxios = {
         create: sinon.stub().returns({
             request: requestStub,
+            interceptors: {
+                response: {
+                    use() {},
+                },
+            },
         }),
     };
     CoamClient.__set__('axios', fakeAxios);
