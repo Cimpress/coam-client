@@ -63,6 +63,41 @@ describe('CoamClient', function() {
         requestStub = mockRequestResponse('yes!');
     });
 
+    describe('ctor()', () => {
+        let testCases = [
+            {
+                name: 'timeout 0, retryAttempts 0, retryDelayInMs 0',
+                options: {timeout: 0, retryAttempts: 0, retryDelayInMs: 0},
+                expectedTimeout: 0,
+                expectedRetryAttempts: 0,
+                expectedRetryDelayInMs: 0,
+            },
+            {
+                name: 'defaults',
+                options: {},
+                expectedTimeout: 10000,
+                expectedRetryAttempts: 2,
+                expectedRetryDelayInMs: 200,
+            },
+            {
+                name: 'random integer values',
+                options: {timeout: 999, retryAttempts: 888, retryDelayInMs: 777},
+                expectedTimeout: 999,
+                expectedRetryAttempts: 888,
+                expectedRetryDelayInMs: 777,
+            },
+        ];
+        testCases.forEach((testCase) => {
+            it(testCase.name, () => {
+                let client = new CoamClient(testCase.options);
+
+                expect(client.timeout).to.equal(testCase.expectedTimeout);
+                expect(client.retryAttempts).to.equal(testCase.expectedRetryAttempts);
+                expect(client.retryDelayInMs).to.equal(testCase.expectedRetryDelayInMs);
+            });
+        });
+    });
+
     it('buildGroupUrlFromId', function() {
         const baseUrl = 'https://www.example.com';
         const client = new CoamClient({baseUrl});
