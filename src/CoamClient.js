@@ -8,10 +8,10 @@ class CoamClient {
     constructor(options) {
         let opts = options || {};
         this.baseUrl = opts.baseUrl || DEFAULT_BASE_URL;
-        this.timeout = opts.timeout || 10000;
+        this.timeout = Number.isInteger(opts.timeout) ? opts.timeout : 10000;
         this.accessToken = opts.accessToken || undefined;
-        this.retryAttempts = opts.retryAttempts || 2;
-        this.retryDelayInMs = opts.retryDelayInMs || 200;
+        this.retryAttempts = Number.isInteger(opts.retryAttempts) ? opts.retryAttempts : 2;
+        this.retryDelayInMs = Number.isInteger(opts.retryDelayInMs) ? opts.retryDelayInMs : 200;
         this.retryOnForbidden = 'retryOnForbidden' in opts ? opts.retryOnForbidden : true;
         this.debugFunction = 'debugFunction' in opts ? opts.debugFunction : undefined;
         // eslint-disable-next-line
