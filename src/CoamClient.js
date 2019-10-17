@@ -127,8 +127,14 @@ class CoamClient {
         return this.__exec(data)
             .then(() => Promise.resolve(true))
             .catch((e) => {
-                this.__logError(this.logPrefix, e);
-                return Promise.resolve(false);
+                // COAM returns a 404 if the principal does not have access to a resource
+                if (e.status === 404) {
+                    return false;
+                }
+
+                // for all other errors, we want to throw an exception so that clients
+                // can retry instead of assuming the user does not have access
+                throw e;
             });
     }
 

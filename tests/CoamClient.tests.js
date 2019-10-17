@@ -125,10 +125,12 @@ describe('CoamClient', function() {
         });
     });
 
-    it('hasPermission', async function() {
+    it('hasPermission - success', async function() {
+        requestStub = mockRequestResponse(Promise.resolve());
         const client = new CoamClient({accessToken: accessToken});
 
-        await client.hasPermission(principal, resourceType, resourceIdentifier, permission);
+        let result = await client.hasPermission(principal, resourceType, resourceIdentifier, permission);
+        expect(result).to.be.true;
 
         calledOnceWith(requestStub, {
             'headers': {
@@ -139,6 +141,27 @@ describe('CoamClient', function() {
             },
             'url': `/auth/access-management/v1/principals/${encodeURIComponent(principal)}/permissions/${encodeURIComponent(resourceType)}/${encodeURIComponent(resourceIdentifier)}/${encodeURIComponent(permission)}`,
         });
+    });
+
+    it('hasPermission - success 404', async function() {
+        requestStub = mockRequestResponse(Promise.reject({status: 404}));
+        const client = new CoamClient({accessToken: accessToken});
+
+        let result = await client.hasPermission(principal, resourceType, resourceIdentifier, permission);
+        expect(result).to.be.false;
+    });
+
+    it('hasPermission - other error', async function() {
+        requestStub = mockRequestResponse(Promise.reject({status: 500}));
+        const client = new CoamClient({accessToken: accessToken});
+
+        let err = undefined;
+        try {
+            await client.hasPermission(principal, resourceType, resourceIdentifier, permission);
+        } catch (errFromCall) {
+            err = errFromCall;
+        }
+        expect(err).to.not.be.undefined;
     });
 
     it('grantRoleToPrincipal', async function() {
