@@ -8,7 +8,7 @@ class CoamClient {
     constructor(options) {
         let opts = options || {};
         this.baseUrl = opts.baseUrl || DEFAULT_BASE_URL;
-        this.timeout = Number.isInteger(opts.timeout) ? opts.timeout : 10000;
+        this.timeout = Number.isInteger(opts.timeout) ? opts.timeout : 8000;
         this.accessToken = opts.accessToken || undefined;
         this.retryAttempts = Number.isInteger(opts.retryAttempts) ? opts.retryAttempts : 2;
         this.retryDelayInMs = Number.isInteger(opts.retryDelayInMs) ? opts.retryDelayInMs : 200;
