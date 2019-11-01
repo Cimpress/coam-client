@@ -75,7 +75,7 @@ describe('CoamClient', function() {
             {
                 name: 'defaults',
                 options: {},
-                expectedTimeout: 10000,
+                expectedTimeout: 8000,
                 expectedRetryAttempts: 2,
                 expectedRetryDelayInMs: 200,
             },

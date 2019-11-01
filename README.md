@@ -24,7 +24,7 @@ by the `options` parameter passed in the constructor.
 * _retryOnForbidden_ - A flag specifying if a retry has to be performed in case of 'Forbidden' response. Defaults to 'true'
 * _debugFunction_ - A function to call to provide debug information. Defaults to none.
 * _errorFunction_ - A function to call on error. Defaults to console.err;
-* _timeout_ - A value setting the timeout of the underlying HTTP calls to COAM. Defaults to 10000 (10 seconds). Set it to 0 for no timeout.
+* _timeout_ - A value setting the timeout of the underlying HTTP calls to COAM. Defaults to 8000 (8 seconds). Set it to 0 for no timeout.
 
 ###### Provided methods 
 * buildGroupUrlFromId(groupId)
