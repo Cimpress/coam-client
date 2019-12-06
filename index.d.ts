@@ -127,3 +127,25 @@ export declare class CoamClient {
   getUsersWithPermission(resourceType: string, resourceIdentifier: string, permission: string): Promise<string[]>;
   createGroupWithUser(principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string, resourcesToAdd: string): Promise<string>;
 }
+
+export declare function buildGroupUrlFromId(groupId: string): string;
+export declare function hasPermission(accessToken: string, principal: string, resourceType: string, resourceIdentifier: string, permission: string): Promise<boolean>;
+export declare function grantRoleToPrincipal(accessToken: string, groupUrl: string, principal: string, roleName: string): Promise<void>;
+export declare function getGroupInfo(accessToken: string, groupUrl: string): Promise<Group>;
+export declare function setAdminFlag(accessToken: string, groupId: string, principal: string, isAdmin: boolean): Promise<void>;
+export declare function removeUserRole(accessToken: string, groupId: string, principal: string, role: string): Promise<void>;
+export declare function addUserRole(accessToken: string, groupId: string, principal: string, role: string): Promise<void>;
+export declare function modifyUserRoles(accessToken: string, groupId: string, principal: string, rolesChanges: string): Promise<void>;
+export declare function addGroupMember(accessToken: string, groupId: string, principal: string, isAdmin: boolean): Promise<void>;
+export declare function removeGroupMember(accessToken: string, groupId: string, principal: string): Promise<void>;
+export declare function getRoles(accessToken: string): Promise<RoleArray>;
+export declare function findPrincipals(accessToken: string, query: string): Promise<CanonicalPrincipalPrimitiveArrayObject>;
+export declare function getPrincipal(accessToken: string, principal: string): Promise<Principal>;
+export declare function createGroup(accessToken: string, name: string, description: string): Promise<Group>;
+export declare function removeGroup(accessToken: string, groupId: string): Promise<void>;
+export declare function findGroups(accessToken: string, resourceType: string, resourceIdentifier: string): Promise<GroupPrimitiveArray>;
+export declare function removeResourceFromGroup(accessToken: string, groupId: string, resourceType: string, resourceId: string): Promise<ResourceArray>;
+export declare function addResourceToGroup(accessToken: string, groupId: string, resourceType: string, resourceId: string): Promise<ResourceArray>;
+export declare function getUserPermissionsForResourceType(accessToken: string, principal: string, resourceType: string): Promise<ResourceIdentifierPermissions[]>;
+export declare function getUsersWithPermission(accessToken: string, resourceType: string, resourceIdentifier: string, permission: string): Promise<string[]>;
+export declare function createGroupWithUser(accessToken: string, principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string, resourcesToAdd: string): Promise<string>;
