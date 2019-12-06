@@ -1,11 +1,12 @@
 {
   "name": "coam-client",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A thin client for COAM service",
   "main": "./lib/index.js",
   "files": [
     "lib"
   ],
+  "typings": "./index.d.ts",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha --require @babel/polyfill --require @babel/register tests/",
     "code-check": "eslint --ext .js --ext .jsx src",
