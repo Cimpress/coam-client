@@ -26,6 +26,7 @@ describe('COAM Helpers', function() {
         'getPrincipal',
         'findPrincipals',
         'getUsersWithPermission',
+        'getUsersWithResource',
     ].forEach((helperName) => {
         it(`${helperName} method calls appropriate client method`, function() {
             const stubs = {
@@ -51,6 +52,7 @@ describe('COAM Helpers', function() {
                 getPrincipal: sinon.spy(),
                 findPrincipals: sinon.spy(),
                 getUsersWithPermission: sinon.spy(),
+                getUsersWithResource: sinon.spy(),
             };
 
             const fakeCoamClient = function() {

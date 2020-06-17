@@ -140,11 +140,18 @@ const getUserPermissionsForResourceType = (accessToken, principal, resourceType)
     return client.getUserPermissionsForResourceType(principal, resourceType);
 };
 
-const getUsersWithPermission = (accessToken, resourceType, resourceIdentifier, permission) => {
+const getUsersWithPermission = (accessToken, resourceType, permissionFilters) => {
     const client = new CoamClient({
         accessToken: accessToken,
     });
-    return client.getUsersWithPermission(resourceType, resourceIdentifier, permission);
+    return client.getUsersWithPermission(resourceType, permissionFilters);
+};
+
+const getUsersWithResource = (accessToken, resourceType, resourceIdentifier, permission) => {
+    const client = new CoamClient({
+        accessToken: accessToken,
+    });
+    return client.getUsersWithResource(resourceType, resourceIdentifier, permission);
 };
 
 const createGroupWithUser = (accessToken, principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd) => {
@@ -184,6 +191,7 @@ module.exports = {
     getPrincipal,
 
     getUsersWithPermission,
+    getUsersWithResource,
 
     createGroupWithUser,
 };
