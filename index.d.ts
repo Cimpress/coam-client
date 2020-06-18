@@ -102,6 +102,17 @@ interface PrincipalGroup {
   is_admin: boolean;
 }
 
+interface ByResourceSearchResult {
+  canonical_principals: CanonicalPrincipalSearchResult[];
+}
+
+interface CanonicalPrincipalSearchResult {
+  canonical_principal: string;
+  resource_type: string;
+  is_client: boolean;
+  permissions: KeyValue<string[]>;
+}
+
 export declare class CoamClient {
   constructor(options: CoamClientOptions);
 
@@ -125,6 +136,7 @@ export declare class CoamClient {
   addResourceToGroup(groupId: string, resourceType: string, resourceId: string): Promise<ResourceArray>;
   getUserPermissionsForResourceType(principal: string, resourceType: string): Promise<ResourceIdentifierPermissions[]>;
   getUsersWithPermission(resourceType: string, resourceIdentifier: string, permission: string): Promise<string[]>;
+  getUsersWithResource(resourceType: string, permissionFilters: string[]): Promise<ByResourceSearchResult>;
   createGroupWithUser(principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string, resourcesToAdd: string): Promise<string>;
 }
 
@@ -148,4 +160,5 @@ export declare function removeResourceFromGroup(accessToken: string, groupId: st
 export declare function addResourceToGroup(accessToken: string, groupId: string, resourceType: string, resourceId: string): Promise<ResourceArray>;
 export declare function getUserPermissionsForResourceType(accessToken: string, principal: string, resourceType: string): Promise<ResourceIdentifierPermissions[]>;
 export declare function getUsersWithPermission(accessToken: string, resourceType: string, resourceIdentifier: string, permission: string): Promise<string[]>;
+export declare function getUsersWithResource(accessToken: string, resourceType: string, permissionFilters: string[]): Promise<ByResourceSearchResult>;
 export declare function createGroupWithUser(accessToken: string, principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string, resourcesToAdd: string): Promise<string>;

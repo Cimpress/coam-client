@@ -18,6 +18,7 @@ const principal = 'xPrincipal';
 const resourceType = 'xResourceType';
 const resourceIdentifier = 'xResourceIdentifier';
 const permission = 'xPermission';
+const permissionFilters = ['permA', 'permB', 'permC'];
 
 
 function calledOnceWith(requestStub, args, withNoCache = true) {
@@ -556,6 +557,32 @@ describe('CoamClient', function() {
         });
     });
 
+    it('getUsersWithResource', async function() {
+        let client = new CoamClient({accessToken: accessToken});
+
+        // Works when specifying resourceIdentifier
+        await client.getUsersWithResource(resourceType);
+        calledOnceWith(requestStub, {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'GET',
+            'url': `/auth/access-management/v1/search/canonicalPrincipals/byResource?resource_type=${resourceType}`,
+        });
+
+        // Works without specifying resourceIdentifier
+        requestStub = mockRequestResponse('yes!');
+        client = new CoamClient({accessToken: accessToken});
+        await client.getUsersWithResource(resourceType, permissionFilters);
+
+        calledOnceWith(requestStub, {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'GET',
+            'url': `/auth/access-management/v1/search/canonicalPrincipals/byResource?resource_type=${resourceType}&permissionFilter=${permissionFilters.join('%2C')}`,
+        });
+    });
 
     it('createGroupWithUser', async function() {
         // define the user and group details that we want to use for this test

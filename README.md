@@ -47,6 +47,7 @@ by the `options` parameter passed in the constructor.
 * addResourceToGroup(groupId, resourceType, resourceId)
 * getUserPermissionsForResourceType(principal, resourceType)
 * getUsersWithPermission(resourceType, resourceIdentifier, permission)
+* getUsersWithResource(resourceType, permissionFilters)
 * createGroupWithUser(principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd)
 
 #### Direct helper functions
@@ -76,6 +77,7 @@ Here is a list of helpers (name + required parameters):
 * **addResourceToGroup** (accessToken, groupId, resourceType, resourceId) 
 * **getUserPermissionsForResourceType** (accessToken, principal, resourceType)
 * **getUsersWithPermission** (accessToken, resourceType, resourceIdentifier, permission)
+* **getUsersWithResource** (accessToken, resourceType, permissionFilters)
 * **createGroupWithUser** (accessToken, principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd)
 
 **Important**: All helper methods are using the CoamClient class with default settings (see above).  

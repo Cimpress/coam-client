@@ -436,6 +436,21 @@ class CoamClient {
     }
 
 
+    getUsersWithResource(resourceType, permissionFilters) {
+        let url = this.__buildUrl(`/auth/access-management/v1/search/canonicalPrincipals/byResource?resource_type={{resourceType}}${permissionFilters && permissionFilters.length > 0 ? '&permissionFilter={{commaSeparatedPermissionFilter}}' : ''}`, {
+            resourceType,
+            commaSeparatedPermissionFilter: permissionFilters && permissionFilters.length > 0 && permissionFilters.join(','),
+        });
+
+        let data = this.__config({
+            url: url,
+            method: 'GET',
+        });
+
+        // [{canonical_principal / resource_type / is_client / permissions}]
+        return this.__exec(data);
+    }
+
     async createGroupWithUser(principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd) {
         let res = await this.createGroup(groupName, groupDescription);
         let groupId = res.id;
