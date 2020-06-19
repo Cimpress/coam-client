@@ -1,6 +1,6 @@
 {
   "name": "coam-client",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A thin client for COAM service",
   "main": "./lib/index.js",
   "files": [
@@ -28,25 +28,25 @@
     "coam"
   ],
   "devDependencies": {
-    "@babel/cli": "7.0.0",
+    "@babel/cli": "^7.0.0",
     "@babel/core": "^7.4.5",
     "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/polyfill": "7.0.0",
+    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.4.5",
-    "@babel/register": "7.0.0",
-    "chai": "^4.1.2",
+    "@babel/register": "^7.0.0",
+    "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.9.1",
-    "mocha": "^5.2.0",
-    "nock": "^9.6.1",
-    "nyc": "^13.0.1",
-    "rewire": "^4.0.1",
-    "sinon": "^7.1.1"
+    "mocha": "^8.0.1",
+    "nock": "^12.0.3",
+    "nyc": "^15.1.0",
+    "rewire": "^5.0.0",
+    "sinon": "^9.0.2"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
-    "axios": "^0.18.1",
-    "axios-retry": "^3.1.1",
+    "@babel/runtime": "^7.10.2",
+    "axios": "^0.19.2",
+    "axios-retry": "^3.1.8",
     "pope": "^2.0.2"
   }
 }

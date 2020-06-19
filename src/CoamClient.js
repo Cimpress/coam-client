@@ -57,7 +57,7 @@ class CoamClient {
                     // do not retry
                     return false;
                 },
-                retryDelay: (retryCount) => {
+                retryDelay: () => {
                     return this.retryDelayInMs;
                 },
                 shouldResetTimeout: true,
@@ -292,7 +292,7 @@ class CoamClient {
     }
 
     findPrincipals(query) {
-        if (!query || query.length == 0) {
+        if (!query || query.length === 0) {
             return Promise.resolve([]);
         }
 
