@@ -60,7 +60,7 @@ function mockRequestResponseWithExactArgs(requestStub, args, resolveWith = undef
 }
 
 describe('CoamClient', function() {
-    beforeEach(function() {
+    beforeEach(() => {
         requestStub = mockRequestResponse('yes!');
     });
 
