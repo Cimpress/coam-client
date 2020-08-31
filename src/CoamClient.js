@@ -407,7 +407,10 @@ class CoamClient {
 
     getUserPermissionsForResourceType(principal, resourceType, include = false, permissionFilters = null) {
         let urlPath = `/auth/access-management/v1/principals/{{principal}}/permissions/{{resourceType}}`;
-        urlPath = include && permissionFilters ? urlPath + `?include=true&permissionFilter={{permissionFilters}}`: urlPath;
+        if (typeof include == 'boolean') {
+            urlPath = permissionFilters ? urlPath + `?include={{include}}&permissionFilter={{permissionFilters}}`: urlPath;
+        }
+        
         let url = this.__buildUrl(urlPath, {
             principal,
             resourceType,
