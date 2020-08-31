@@ -410,7 +410,6 @@ class CoamClient {
         if (include) {
             urlPath = urlPath + `?include={{include}}&permissionFilter={{permissionFilters}}`;
         }
-        
         let url = this.__buildUrl(urlPath, {
             principal,
             resourceType,
