@@ -75,7 +75,7 @@ Here is a list of helpers (name + required parameters):
 * **findGroups** (accessToken, resourceType, resourceIdentifier) 
 * **removeResourceFromGroup** (accessToken, groupId, resourceType, resourceId) 
 * **addResourceToGroup** (accessToken, groupId, resourceType, resourceId) 
-* **getUserPermissionsForResourceType** (accessToken, principal, resourceType, include, permissionsFilters)
+* **getUserPermissionsForResourceType** (accessToken, principal, resourceType, include, permissionFilters)
 * **getUsersWithPermission** (accessToken, resourceType, resourceIdentifier, permission)
 * **getUsersWithResource** (accessToken, resourceType, permissionFilters)
 * **createGroupWithUser** (accessToken, principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd)
