@@ -406,7 +406,8 @@ class CoamClient {
     }
 
     getUserPermissionsForResourceType(principal, resourceType, include = null, permissionFilters = null) {
-        let url = this.__buildUrl(`/auth/access-management/v1/principals/{{principal}}/permissions/{{resourceType}}`.concat(include ? `?include={{include}}&permissionFilter={{permissionFilters}}`:''), {
+        let urlString = `/auth/access-management/v1/principals/{{principal}}/permissions/{{resourceType}}`.concat(include ? `?include={{include}}`: '').concat(permissionFilters ? `&permissionFilter={{permissionFilters}}`:'');
+        let url = this.__buildUrl(urlString, {
             principal,
             resourceType,
         });
