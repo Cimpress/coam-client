@@ -133,7 +133,7 @@ const addResourceToGroup = (accessToken, groupId, resourceType, resourceId) => {
     return client.addResourceToGroup(groupId, resourceType, resourceId);
 };
 
-const getUserPermissionsForResourceType = (accessToken, principal, resourceType, include = null, permissionFilters = null) => {
+const getUserPermissionsForResourceType = (accessToken, principal, resourceType, include = true, permissionFilters = null) => {
     const client = new CoamClient({
         accessToken: accessToken,
     });
