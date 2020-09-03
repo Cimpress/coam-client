@@ -518,15 +518,16 @@ describe('CoamClient', function() {
 
     it('getUserPermissionsForResourceType', async function() {
         const client = new CoamClient({accessToken: accessToken});
-
-        await client.getUserPermissionsForResourceType(principal, resourceType);
+        const permissionFilter = 'test_permission';
+        const include = true;
+        await client.getUserPermissionsForResourceType(principal, resourceType, include, permissionFilter)
 
         calledOnceWith(requestStub, {
             'headers': {
                 'Authorization': `Bearer ${accessToken}`,
             },
             'method': 'GET',
-            'url': `/auth/access-management/v1/principals/${principal}/permissions/${resourceType}`,
+            'url': `/auth/access-management/v1/principals/${principal}/permissions/${resourceType}?include=true&permissionFilter=test_permission`,
         });
     });
 
