@@ -532,7 +532,7 @@ describe('CoamClient', function() {
     });
     it('getUserPermissionsForResourceType - with Permission Filter', async function() {
         const client = new CoamClient({accessToken: accessToken});
-        const permissionFilter = 'test_permission';
+        const permissionFilter = ['test_permission'];
         const include = true;
         await client.getUserPermissionsForResourceType(principal, resourceType, include, permissionFilter)
 
