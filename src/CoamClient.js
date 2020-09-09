@@ -420,6 +420,20 @@ class CoamClient {
         return this.__exec(data);
     }
 
+    getUserPermissionsForResourceTypes(principal, resourceTypes, include = true, permissionFilters = null) {
+        let urlString = `/auth/access-management/v1/principals/{{principal}}/permissions?resourceTypes=${resourceTypes.join(',')}&include=${include}`.concat(permissionFilters ? `&permissionFilter=${permissionFilters.join(',')}`:'');
+        let url = this.__buildUrl(urlString, {
+            principal,
+        });
+
+        let data = this.__config({
+            url: url,
+            method: 'GET',
+        });
+
+        return this.__exec(data);
+    }
+
     getUsersWithPermission(resourceType, resourceIdentifier, permission) {
         let url = this.__buildUrl(`/auth/access-management/v1/search/canonicalPrincipals/byPermission?resource_type={{resourceType}}${resourceIdentifier ? '&resource_identifier={{resourceIdentifier}}' : ''}&permission={{permission}}`, {
             resourceType,

@@ -545,6 +545,19 @@ describe('CoamClient', function() {
         });
     });
 
+    it('getUserPermissionsForResourceTypes', async function() {
+        const client = new CoamClient({accessToken: accessToken});
+        const resourceTypes = ['fulfillers'];
+        await client.getUserPermissionsForResourceTypes(principal, resourceTypes)
+
+        calledOnceWith(requestStub, {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'GET',
+            'url': `/auth/access-management/v1/principals/${principal}/permissions?resourceTypes=${resourceTypes.join(',')}&include=true`,
+        });
+    });
     it('getUsersWithPermission', async function() {
         let client = new CoamClient({accessToken: accessToken});
 
