@@ -67,8 +67,8 @@ class CoamClient {
     }
 
     __exec(data) {
-        if(this.skipCache && data.method === 'GET') {
-            data.params = data.params ? {...data.params, skipCache: Math.random() } : { skipCache: Math.random() }
+        if (this.skipCache && data.method === 'GET') {
+            data.params = data.params ? Object.assign(data.params, {skipCache: Math.random()}) : {skipCache: Math.random()};
         }
         return this.instance
             .request(data)
@@ -122,7 +122,7 @@ class CoamClient {
 
         let data = this.__config({
             url: url,
-            method: 'GET'
+            method: 'GET',
         });
 
         return this.__exec(data)
@@ -156,7 +156,7 @@ class CoamClient {
             url: groupUrl,
             method: 'GET',
             params: {
-                canonicalize: 'true'
+                canonicalize: 'true',
             },
         });
 
@@ -221,7 +221,7 @@ class CoamClient {
 
         let data = this.__config({
             url: url,
-            method: 'GET'
+            method: 'GET',
         });
 
         return this.__exec(data).then((data) => !!data.groups.find((a) => a.id === '56'));
@@ -298,7 +298,7 @@ class CoamClient {
             method: 'GET',
             params: {
                 q: query,
-                canonicalize: true
+                canonicalize: true,
             },
         });
 
@@ -350,7 +350,7 @@ class CoamClient {
             method: 'GET',
             params: {
                 resource_type: resourceType,
-                resource_identifier: resourceIdentifier
+                resource_identifier: resourceIdentifier,
             },
         });
 
