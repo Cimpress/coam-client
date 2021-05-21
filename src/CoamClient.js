@@ -16,12 +16,13 @@ class CoamClient {
         this.debugFunction = 'debugFunction' in opts ? opts.debugFunction : undefined;
         // eslint-disable-next-line
         this.errorFunction = 'errorFunction' in opts ? opts.errorFunction : console.error;
+        this.skipCache = 'skipCache' in opts ? opts.skipCache : false;
 
         this.logPrefix = '[CoamClient]';
 
         let validOptions = ['baseUrl', 'accessToken', 'timeout',
             'retryAttempts', 'retryDelayInMs', 'retryOnForbidden',
-            'debugFunction', 'errorFunction'];
+            'debugFunction', 'errorFunction', 'skipCache'];
 
         Object.keys(opts).forEach((passedOption) => {
             if (validOptions.indexOf(passedOption) === -1) {
@@ -66,6 +67,9 @@ class CoamClient {
     }
 
     __exec(data) {
+        if (this.skipCache && data.method === 'GET') {
+            data.params = Object.assign(data.params || {}, {skipCache: Math.random()});
+        }
         return this.instance
             .request(data)
             .then((response) => {
@@ -119,9 +123,6 @@ class CoamClient {
         let data = this.__config({
             url: url,
             method: 'GET',
-            params: {
-                skipCache: Math.random(),
-            },
         });
 
         return this.__exec(data)
@@ -156,7 +157,6 @@ class CoamClient {
             method: 'GET',
             params: {
                 canonicalize: 'true',
-                skipCache: Math.random(),
             },
         });
 
@@ -222,9 +222,6 @@ class CoamClient {
         let data = this.__config({
             url: url,
             method: 'GET',
-            params: {
-                skipCache: Math.random(),
-            },
         });
 
         return this.__exec(data).then((data) => !!data.groups.find((a) => a.id === '56'));
@@ -302,7 +299,6 @@ class CoamClient {
             params: {
                 q: query,
                 canonicalize: true,
-                skipCache: Math.random(),
             },
         });
 
@@ -317,9 +313,6 @@ class CoamClient {
         let data = this.__config({
             url,
             method: 'GET',
-            params: {
-                skipCache: Math.random(),
-            },
         });
         return this.__exec(data);
     }
@@ -358,7 +351,6 @@ class CoamClient {
             params: {
                 resource_type: resourceType,
                 resource_identifier: resourceIdentifier,
-                skipCache: Math.random(),
             },
         });
 

@@ -21,13 +21,13 @@ const permission = 'xPermission';
 const permissionFilters = ['permA', 'permB', 'permC'];
 
 
-function calledOnceWith(requestStub, args, withNoCache = true) {
-    calledWith(requestStub, args, withNoCache, 1);
+function calledOnceWith(requestStub, args, skipCache) {
+    calledWith(requestStub, args, skipCache, 1);
 }
 
-function calledWith(requestStub, args, withNoCache = true, times = 1) {
+function calledWith(requestStub, args, skipCache, times = 1) {
     expect(requestStub.callCount).to.equal(times);
-    if (withNoCache && requestStub.args[0][0]['params'] && requestStub.args[0][0].method === 'GET') {
+    if (skipCache && requestStub.args[0][0]['params'] && requestStub.args[0][0].method === 'GET') {
         expect(requestStub.args[0][0]['params'].skipCache).to.exist;
         delete requestStub.args[0][0]['params'].skipCache;
     }
@@ -138,10 +138,25 @@ describe('CoamClient', function() {
                 'Authorization': `Bearer ${accessToken}`,
             },
             'method': 'GET',
-            'params': {
-            },
             'url': `/auth/access-management/v1/principals/${encodeURIComponent(principal)}/permissions/${encodeURIComponent(resourceType)}/${encodeURIComponent(resourceIdentifier)}/${encodeURIComponent(permission)}`,
         });
+    });
+
+    it('hasPermission - skipCache', async function() {
+        requestStub = mockRequestResponse(Promise.resolve());
+        const client = new CoamClient({accessToken: accessToken, skipCache: true});
+
+        let result = await client.hasPermission(principal, resourceType, resourceIdentifier, permission);
+        expect(result).to.be.true;
+
+        calledOnceWith(requestStub, {
+            'headers': {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            'method': 'GET',
+            "params": {},
+            'url': `/auth/access-management/v1/principals/${encodeURIComponent(principal)}/permissions/${encodeURIComponent(resourceType)}/${encodeURIComponent(resourceIdentifier)}/${encodeURIComponent(permission)}`,
+        }, true);
     });
 
     it('hasPermission - success 404', async function() {
@@ -179,7 +194,7 @@ describe('CoamClient', function() {
                 'canonicalize': 'true',
             },
             'url': groupUrl,
-        }, true, 3);
+        }, false, 3);
     });
 
     it('setAdminFlag', async function() {
@@ -248,9 +263,6 @@ describe('CoamClient', function() {
                 'Authorization': `Bearer ${accessToken}`,
             },
             'method': 'GET',
-            'params': {
-
-            },
             'url': `/auth/access-management/v1/principals/${principal}/groups`,
         });
     });
@@ -379,7 +391,6 @@ describe('CoamClient', function() {
                 'Authorization': `Bearer ${accessToken}`,
             },
             'method': 'GET',
-            'params': {},
             'url': '/auth/access-management/v1/principals/asd',
         });
     });

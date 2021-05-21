@@ -25,6 +25,7 @@ by the `options` parameter passed in the constructor.
 * _debugFunction_ - A function to call to provide debug information. Defaults to none.
 * _errorFunction_ - A function to call on error. Defaults to console.err;
 * _timeout_ - A value setting the timeout of the underlying HTTP calls to COAM. Defaults to 8000 (8 seconds). Set it to 0 for no timeout.
+* _skipCache_ - A flag specifying if cache should be skipped. Defaults to 'false'
 
 ###### Provided methods 
 * buildGroupUrlFromId(groupId)
