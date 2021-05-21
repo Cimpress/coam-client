@@ -68,7 +68,7 @@ class CoamClient {
 
     __exec(data) {
         if (this.skipCache && data.method === 'GET') {
-            data.params = data.params ? Object.assign(data.params, {skipCache: Math.random()}) : {skipCache: Math.random()};
+            data.params = Object.assign(data.params || {}, {skipCache: Math.random()});
         }
         return this.instance
             .request(data)
