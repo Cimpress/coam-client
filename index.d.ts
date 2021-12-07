@@ -137,7 +137,7 @@ export declare class CoamClient {
   getUserPermissionsForResourceType(principal: string, resourceType: string): Promise<ResourceIdentifierPermissions[]>;
   getUsersWithPermission(resourceType: string, resourceIdentifier: string, permission: string): Promise<string[]>;
   getUsersWithResource(resourceType: string, permissionFilters: string[]): Promise<ByResourceSearchResult>;
-  createGroupWithUser(principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string, resourcesToAdd: string): Promise<string>;
+  createGroupWithUser(principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string[], resourcesToAdd: { resourceType: string, resourceIdentifier: string }[]): Promise<string>;
 }
 
 export declare function buildGroupUrlFromId(groupId: string): string;
@@ -161,4 +161,4 @@ export declare function addResourceToGroup(accessToken: string, groupId: string,
 export declare function getUserPermissionsForResourceType(accessToken: string, principal: string, resourceType: string): Promise<ResourceIdentifierPermissions[]>;
 export declare function getUsersWithPermission(accessToken: string, resourceType: string, resourceIdentifier: string, permission: string): Promise<string[]>;
 export declare function getUsersWithResource(accessToken: string, resourceType: string, permissionFilters: string[]): Promise<ByResourceSearchResult>;
-export declare function createGroupWithUser(accessToken: string, principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string, resourcesToAdd: string): Promise<string>;
+export declare function createGroupWithUser(accessToken: string, principalToCreateGroup: string, principalToAddToGroup: string, groupName: string, groupDescription: string, rolesToAdd: string[], resourcesToAdd: { resourceType: string, resourceIdentifier: string }[]): Promise<string>;

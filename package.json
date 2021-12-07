@@ -1,10 +1,11 @@
 {
   "name": "coam-client",
-  "version": "0.2.9",
+  "version": "0.3.1",
   "description": "A thin client for COAM service",
   "main": "./lib/index.js",
   "files": [
-    "lib"
+    "lib",
+    "index.d.ts"
   ],
   "typings": "./index.d.ts",
   "scripts": {
