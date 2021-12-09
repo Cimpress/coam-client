@@ -3,7 +3,10 @@ const expect = require('chai').expect;
 
 describe('Index', function() {
     it('exports are as expected', function() {
-        expect(Object.keys(indexExports)).to.deep.equal(['CoamClient',
+        const r = Object.keys(indexExports);
+	r.sort();
+	
+	const e = ['CoamClient',
             'getRoles',
             'grantRoleToPrincipal',
             'addUserRole',
@@ -23,6 +26,9 @@ describe('Index', function() {
             'getUserPermissionsForResourceType',
             'findGroups',
             'findPrincipals',
-            'getPrincipal']);
+            'getPrincipal'];
+	e.sort();
+
+        expect(r).to.deep.equal(e);
     });
 });
