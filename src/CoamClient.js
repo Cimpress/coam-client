@@ -475,7 +475,7 @@ class CoamClient {
             await this.removeGroupMember(groupId, principalToCreateGroup);
         } catch (err) {
             //  Removing the creator of a COAM group causes a 404, known issue
-            if (err.response.status !== 404) {
+            if (err.status !== 404) {
                 throw err;
             }
         }
