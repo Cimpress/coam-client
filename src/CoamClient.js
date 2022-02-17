@@ -2,9 +2,6 @@ const axios = require('axios');
 const axiosRetry = require('axios-retry');
 const {pope} = require('pope');
 
-console.log(axiosRetry);
-process.exit(1);
-
 const DEFAULT_BASE_URL = 'https://api.cimpress.io';
 
 class CoamClient {
