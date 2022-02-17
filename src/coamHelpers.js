@@ -1,4 +1,4 @@
-let CoamClient = require('./CoamClient');
+const CoamClient = require('./CoamClient');
 
 const buildGroupUrlFromId = (groupId) => {
     const client = new CoamClient();

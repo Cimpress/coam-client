@@ -6,7 +6,7 @@ const DEFAULT_BASE_URL = 'https://api.cimpress.io';
 
 class CoamClient {
     constructor(options) {
-        let opts = options || {};
+        const opts = options || {};
         this.baseUrl = opts.baseUrl || DEFAULT_BASE_URL;
         this.timeout = Number.isInteger(opts.timeout) ? opts.timeout : 8000;
         this.accessToken = opts.accessToken || undefined;
@@ -20,7 +20,7 @@ class CoamClient {
 
         this.logPrefix = '[CoamClient]';
 
-        let validOptions = ['baseUrl', 'accessToken', 'timeout',
+        const validOptions = ['baseUrl', 'accessToken', 'timeout',
             'retryAttempts', 'retryDelayInMs', 'retryOnForbidden',
             'debugFunction', 'errorFunction', 'skipCache'];
 
@@ -36,7 +36,7 @@ class CoamClient {
             timeout: this.timeout,
         });
         this.instance.interceptors.response.use((response) => response, (error) => {
-            let newError = error && error.response && {
+            const newError = error && error.response && {
                 data: error.response.data,
                 status: error.response.status,
                 headers: error.response.headers,
@@ -90,7 +90,7 @@ class CoamClient {
     }
 
     __buildUrl(urlPattern, dataToEncode) {
-        let encoded = {};
+        const encoded = {};
         Object.keys(dataToEncode).forEach( (k) => encoded[k] = encodeURIComponent(dataToEncode[k]));
         return pope(urlPattern, encoded);
     }
@@ -112,7 +112,7 @@ class CoamClient {
     }
 
     hasPermission(principal, resourceType, resourceIdentifier, permission) {
-        let url = this.__buildUrl(
+        const url = this.__buildUrl(
             `/auth/access-management/v1/principals/{{principal}}/permissions/{{resourceType}}/{{resourceIdentifier}}/{{permission}}`, {
                 principal,
                 resourceType,
@@ -120,7 +120,7 @@ class CoamClient {
                 permission,
             });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'GET',
         });
@@ -143,16 +143,15 @@ class CoamClient {
         return this.getGroupInfo(groupUrl)
             .then((groupInfo) => {
                 if (!groupInfo) {
-                    return Promise.reject('Failed to retrieve template COAM group.');
+                    return Promise.reject(new Error('Failed to retrieve template COAM group.'));
                 }
                 return this.addGroupMember(groupInfo.id, principal, false)
-                    .then(() => this.modifyUserRoles(groupInfo.id, principal, {'add': [roleName]})
-                    );
+                    .then(() => this.modifyUserRoles(groupInfo.id, principal, {'add': [roleName]}));
             });
     }
 
     getGroupInfo(groupUrl) {
-        let data = this.__config({
+        const data = this.__config({
             url: groupUrl,
             method: 'GET',
             params: {
@@ -164,12 +163,12 @@ class CoamClient {
     }
 
     setAdminFlag(groupId, principal, isAdmin) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}`, {
             groupId,
             principal,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: {
@@ -181,12 +180,12 @@ class CoamClient {
     }
 
     removeUserRole(groupId, principal, role) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}/roles`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}/roles`, {
             groupId,
             principal,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: {
@@ -198,12 +197,12 @@ class CoamClient {
     }
 
     addUserRole(groupId, principal, role) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}/roles`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}/roles`, {
             groupId,
             principal,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: {
@@ -215,11 +214,11 @@ class CoamClient {
     }
 
     group56(principal) {
-        let url = this.__buildUrl(`/auth/access-management/v1/principals/{{principal}}/groups`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/principals/{{principal}}/groups`, {
             principal,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'GET',
         });
@@ -228,12 +227,12 @@ class CoamClient {
     }
 
     modifyUserRoles(groupId, principal, rolesChanges) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}/roles`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members/{{principal}}/roles`, {
             groupId,
             principal,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: rolesChanges,
@@ -243,11 +242,11 @@ class CoamClient {
     }
 
     addGroupMember(groupId, principal, isAdmin) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members`, {
             groupId,
             principal,
         });
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: {
@@ -265,10 +264,10 @@ class CoamClient {
     }
 
     removeGroupMember(groupId, principal) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/members`, {
             groupId,
         });
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: {
@@ -280,7 +279,7 @@ class CoamClient {
     }
 
     getRoles() {
-        let data = this.__config({
+        const data = this.__config({
             url: `/auth/access-management/v1/roles`,
             method: 'GET',
         });
@@ -293,7 +292,7 @@ class CoamClient {
             return Promise.resolve([]);
         }
 
-        let data = this.__config({
+        const data = this.__config({
             url: '/auth/access-management/v1/search/canonicalPrincipals/bySubstring',
             method: 'GET',
             params: {
@@ -307,10 +306,10 @@ class CoamClient {
     }
 
     getPrincipal(principal) {
-        let url = this.__buildUrl(`/auth/access-management/v1/principals/{{principal}}`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/principals/{{principal}}`, {
             principal,
         });
-        let data = this.__config({
+        const data = this.__config({
             url,
             method: 'GET',
         });
@@ -318,7 +317,7 @@ class CoamClient {
     }
 
     createGroup(name, description) {
-        let data = this.__config({
+        const data = this.__config({
             url: '/auth/access-management/v1/groups',
             method: 'POST',
             data: {
@@ -332,11 +331,11 @@ class CoamClient {
     }
 
     removeGroup(groupId) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}`, {
             groupId,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'DELETE',
         });
@@ -345,7 +344,7 @@ class CoamClient {
     }
 
     findGroups(resourceType, resourceIdentifier) {
-        let data = this.__config({
+        const data = this.__config({
             url: `/auth/access-management/v1/groups`,
             method: 'GET',
             params: {
@@ -358,11 +357,11 @@ class CoamClient {
     }
 
     removeResourceFromGroup(groupId, resourceType, resourceId) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/resources`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/resources`, {
             groupId,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: {
@@ -378,11 +377,11 @@ class CoamClient {
     }
 
     addResourceToGroup(groupId, resourceType, resourceId) {
-        let url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/resources`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/groups/{{groupId}}/resources`, {
             groupId,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'PATCH',
             data: {
@@ -398,13 +397,13 @@ class CoamClient {
     }
 
     getUserPermissionsForResourceType(principal, resourceType, include = true, permissionFilters = null) {
-        let urlString = `/auth/access-management/v1/principals/{{principal}}/permissions/{{resourceType}}?include=${include}`.concat(permissionFilters ? `&permissionFilter=${permissionFilters.join(',')}`:'');
-        let url = this.__buildUrl(urlString, {
+        const urlString = `/auth/access-management/v1/principals/{{principal}}/permissions/{{resourceType}}?include=${include}`.concat(permissionFilters ? `&permissionFilter=${permissionFilters.join(',')}`:'');
+        const url = this.__buildUrl(urlString, {
             principal,
             resourceType,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'GET',
         });
@@ -413,12 +412,12 @@ class CoamClient {
     }
 
     getUserPermissionsForResourceTypes(principal, resourceTypes, include = true, permissionFilters = null) {
-        let urlString = `/auth/access-management/v1/principals/{{principal}}/permissions?resourceTypes=${resourceTypes.join(',')}&include=${include}`.concat(permissionFilters ? `&permissionFilter=${permissionFilters.join(',')}`:'');
-        let url = this.__buildUrl(urlString, {
+        const urlString = `/auth/access-management/v1/principals/{{principal}}/permissions?resourceTypes=${resourceTypes.join(',')}&include=${include}`.concat(permissionFilters ? `&permissionFilter=${permissionFilters.join(',')}`:'');
+        const url = this.__buildUrl(urlString, {
             principal,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'GET',
         });
@@ -427,13 +426,13 @@ class CoamClient {
     }
 
     getUsersWithPermission(resourceType, resourceIdentifier, permission) {
-        let url = this.__buildUrl(`/auth/access-management/v1/search/canonicalPrincipals/byPermission?resource_type={{resourceType}}${resourceIdentifier ? '&resource_identifier={{resourceIdentifier}}' : ''}&permission={{permission}}`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/search/canonicalPrincipals/byPermission?resource_type={{resourceType}}${resourceIdentifier ? '&resource_identifier={{resourceIdentifier}}' : ''}&permission={{permission}}`, {
             resourceType,
             resourceIdentifier,
             permission,
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'GET',
         });
@@ -444,12 +443,12 @@ class CoamClient {
 
 
     getUsersWithResource(resourceType, permissionFilters) {
-        let url = this.__buildUrl(`/auth/access-management/v1/search/canonicalPrincipals/byResource?resource_type={{resourceType}}${permissionFilters && permissionFilters.length > 0 ? '&permissionFilter={{commaSeparatedPermissionFilter}}' : ''}`, {
+        const url = this.__buildUrl(`/auth/access-management/v1/search/canonicalPrincipals/byResource?resource_type={{resourceType}}${permissionFilters && permissionFilters.length > 0 ? '&permissionFilter={{commaSeparatedPermissionFilter}}' : ''}`, {
             resourceType,
             commaSeparatedPermissionFilter: permissionFilters && permissionFilters.length > 0 && permissionFilters.join(','),
         });
 
-        let data = this.__config({
+        const data = this.__config({
             url: url,
             method: 'GET',
         });
@@ -459,8 +458,8 @@ class CoamClient {
     }
 
     async createGroupWithUser(principalToCreateGroup, principalToAddToGroup, groupName, groupDescription, rolesToAdd, resourcesToAdd) {
-        let res = await this.createGroup(groupName, groupDescription);
-        let groupId = res.id;
+        const res = await this.createGroup(groupName, groupDescription);
+        const groupId = res.id;
 
         await this.addGroupMember(groupId, principalToAddToGroup);
         await this.setAdminFlag(groupId, principalToAddToGroup, true);
@@ -468,7 +467,7 @@ class CoamClient {
             await this.addUserRole(groupId, principalToAddToGroup, rolesToAdd[i]);
         }
         for (let i = 0; i < resourcesToAdd.length; i++) {
-            let resource = resourcesToAdd[i];
+            const resource = resourcesToAdd[i];
             await this.addResourceToGroup(groupId, resource.resourceType, resource.resourceId);
         }
         try {
