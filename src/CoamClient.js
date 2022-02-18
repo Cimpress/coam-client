@@ -1,5 +1,5 @@
 const axios = require('axios');
-const axiosRetry = require('axios-retry');
+let axiosRetry = require('axios-retry');
 const {pope} = require('pope');
 
 const DEFAULT_BASE_URL = 'https://api.cimpress.io';
@@ -45,6 +45,10 @@ class CoamClient {
         });
 
         if (this.retryAttempts > 0) {
+            if (typeof axiosRetry !== 'function') {
+                axiosRetry = axiosRetry.default;
+            }
+
             axiosRetry(this.instance, {
                 retries: this.retryAttempts,
                 retryCondition: (error) => {
